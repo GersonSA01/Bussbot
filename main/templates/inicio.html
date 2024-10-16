@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Bienvenido - BussBot{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="main-content container">
+        <div class="sidebar">
+            <div class="input-container">
+                <!-- Input de origen -->
+                <div class="input-wrapper">
+                    <i class="fas fa-search"></i> <!-- Ícono de búsqueda -->
+                    <input type="text" placeholder="Selecciona origen">
+                </div>
+                
+                <!-- Input de destino -->
+                <div class="input-wrapper">
+                    <i class="fas fa-search"></i> <!-- Ícono de búsqueda -->
+                    <input type="text" placeholder="Selecciona destino">
+                </div>
+            </div>
+            
+            <!-- Resultados de búsqueda -->
+            <div class="result-item">
+                <i class="fas fa-bus"></i>
+                <p>Av. 26 - So (Portete De Tarqui) Y Calle 17 -So (Milagro) (49)</p>
+            </div>
+            <div class="result-item">
+                <i class="fas fa-bus"></i>
+                <p>Calle 17 - So (Milagro) Y Calle Carlos Gomez Rendon - So (S135)</p>
+            </div>
+            
+            <div class="suggestion">
+                Agrega direcciones de origen y destino para obtener una lista de rutas sugeridas entre ambas.
+            </div>
+            
+        </div>
+
+        <div class="map-container">
+            <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15936.423650610026!2d-79.5988940173376!3d-2.1323284841880536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902d156a4c399ff5%3A0xa4a53a96229b2b91!2sUniversidad%20Estatal%20de%20Milagro%20(UNEMI)!5e0!3m2!1ses-419!2sec!4v1697402599373!5m2!1ses-419!2sec"
+            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">Buss-Bot</div>
+            <div class="chat-body" id="chat-body">
+            </div>
+            <form class="chat-footer">
+                <input type="text" class="form-control" placeholder="Escribe un mensaje..." required>
+                <button type="submit" class="btn btn-custom">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+        
+    </div>
+
+  
+    <script src="{% static 'js/chatbot.js' %}"></script>
+
+{% endblock %}

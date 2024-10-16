@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %} <!-- Cargar el tag static de Django -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Bienvenido - BussBot{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="header-container">
+        <h1>BUSSBOT</h1>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer, solo visible si el usuario está autenticado -->
+    {% if user.is_authenticated %}
+    <div class="footer-menu">
+        <div class="menu-item">
+            <a href="/inicio" class="text-white">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/rutas-guardadas" class="text-white">
+                <i class="fas fa-bookmark"></i>
+                <span>Rutas Guardadas</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="/perfil" class="text-white">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

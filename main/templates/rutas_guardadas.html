@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Rutas Guardadas - BussBot{% endblock %}
+
+{% block content %}
+    <div class="main-content container">
+        <div class="sidebar">
+            <h4>Origen</h4>
+            <h4>Destino</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Ubicación actual</p>
+        </div>
+
+        <div class="saved-routes-container">
+            <h3 class="saved-routes-title">Rutas guardadas</h3>
+            <div class="route-card">
+                <h5>Ruta 1: Terminal-UNEMI</h5>
+            </div>
+            <div class="route-card">
+                <h5>Ruta 2: Centro-Supermaxi</h5>
+            </div>
+        </div>
+
+        <div class="chatbot-container">
+            <h5>Buss-Bot</h5>
+            <div class="chat-bubble">Hola, ¿cómo puedo ayudarte?</div>
+            <div class="chat-bubble user">¿Qué rutas están disponibles?</div>
+            <div class="chat-bubble">Las rutas disponibles son Terminal-UNEMI y Centro-Supermaxi.</div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - BussBot{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <div class="login-header">
+            <h3>INICIAR SESIÓN</h3>
+        </div>
+        <form method="post" class="p-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Usuario</label>
+                <input type="text" name="username" class="form-control" id="id_username" placeholder="Ingrese su usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Contraseña</label>
+                <input type="password" name="password" class="form-control" id="id_password" placeholder="Ingrese su contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-custom btn-block">Ingresar</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'register' %}">¿No tienes una cuenta? Regístrate</a>
+        </div>
+    </div>
+{% endblock %}

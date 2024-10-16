@@ -1,0 +1,386 @@
+/* Estilo general del cuerpo */
+body {
+    background-color: #e6f7ff; 
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    padding-right: 0 !important; 
+    padding-left: 0 !important;
+    margin-right: 0 !important; 
+    margin-left: 0 !important;
+    width: auto !important; 
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: none !important; 
+        width: 100% !important; 
+    }
+}
+
+/* Encabezado */
+.header-container h1 {
+    font-family: 'Pacifico', cursive; /* Ajusta la fuente según la imagen */
+    font-size: 3rem;
+    background-color: #002060; /* Azul oscuro */
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin: 0; /* Eliminar márgenes adicionales */
+}
+
+/* Contenedor de Perfil */
+.profile-container {
+    max-width: 600px;
+    width: 90%; /* Para que se ajuste bien en dispositivos móviles */
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones personalizados */
+.btn-custom {
+    background-color: #002060; /* Azul oscuro */
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-custom:hover {
+    background-color: #001645; /* Azul más oscuro al hacer hover */
+    color: white;
+}
+
+/* Contenedor de Login y Registro */
+.login-container, .register-container {
+    max-width: 450px; /* Ajustar el ancho del contenedor */
+    width: 90%; /* Para que se ajuste bien en dispositivos móviles */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-header, .register-header {
+    background-color: #002060; /* Azul oscuro */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 15px 15px 0 0;
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 15px; /* Bordes redondeados para los campos de entrada */
+}
+
+.form-control:focus {
+    border-color: #002060;
+    box-shadow: 0 0 5px rgba(0, 32, 96, 0.5); /* Sombra azul al hacer foco */
+}
+
+.register-container a, .login-container a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #002060; /* Enlace en azul oscuro */
+}
+
+/* Estilo responsive para dispositivos móviles */
+@media (max-width: 576px) {
+    .login-container, .register-container, .profile-container {
+        max-width: 90%; /* Ajusta el ancho para pantallas más pequeñas */
+        margin: 10px auto; /* Asegura que haya espacio en pantallas pequeñas */
+    }
+
+    .header-container h1 {
+        font-size: 2.5rem; /* Reducir tamaño de fuente en dispositivos móviles */
+    }
+}
+
+
+.main-content.container { 
+    justify-content: space-between;
+    display: flex; 
+    align-items: flex-start;
+    gap: 20px;
+
+}
+
+/* Estilo del sidebar */
+.sidebar {
+    background-color: #2A3160;
+    color: white;
+    padding: 15px;
+    max-width: 350px;
+    height: 100vh;
+}
+
+.sidebar h4, .sidebar p {
+    color: white;
+    font-family: 'Ranga', cursive;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* Estilo para los inputs */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f4f4f4; /* Fondo claro */
+    color: #333;
+    outline: none;
+}
+
+/* Contenedor de los inputs */
+.input-container {
+    background-color: #333; /* Fondo oscuro del contenedor */
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.input-container input::placeholder {
+    color: #999; /* Placeholder en color gris */
+}
+
+/* Iconos dentro de los inputs */
+.input-container i {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+/* Estilo de los resultados */
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+}
+
+.result-item i {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.result-item p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Estilo para la ubicación actual */
+.location-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.location-text {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Ajuste para la sugerencia */
+.suggestion {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* Estilos para elementos con foco */
+input:focus {
+    border-color: #007bff; /* Azul claro cuando el input está en foco */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra azul */
+}
+
+
+
+
+
+
+
+
+/* Contenedor de Mapa */
+.map-container {
+    flex: 3;
+    max-width: 600px;
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+
+/* Chat container */
+.chat-container {
+    width: 100%;
+    flex: 2;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 60px;
+    margin-top: 20px;
+
+}
+
+.chat-header {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
+}
+
+.chat-body {
+    padding: 20px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.chat-footer {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #f7f7f7;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    transform: translateY(20px);
+}
+
+.message.bot {
+    background-color: #4A70FF;
+    text-align: left;
+    width: 300px;
+    color: #fff;
+}
+
+.message.user {
+    background-color: #ADD8E6;
+    color: #000000;
+    margin-left: auto;
+    width: 300px;
+    text-align: left;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.option {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option:hover {
+    background-color: #0056b3;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Footer menu */
+.footer-menu {
+    background-color: #002060; /* Azul oscuro */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.footer-menu .menu-item {
+    color: white;
+    text-align: center;
+}
+
+.footer-menu .menu-item i {
+    font-size: 24px;
+    display: block;
+}
+
+/* Responsividad adicional */
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+
+    
+    .main-content {
+        flex-direction: column;
+        align-items: stretch; 
+    }
+
+    .sidebar {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .map-container {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .chat-container {
+        width: 100%;
+    }
+
+    .footer-menu {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-menu .menu-item {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* Ajustes para pantallas aún más pequeñas (móviles) */
+@media (max-width: 576px) {
+    .chat-body {
+        height: 150px; /* Reducir el tamaño del chat en pantallas pequeñas */
+    }
+
+    .footer-menu {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .footer-menu .menu-item {
+        margin: 0;
+        padding: 5px;
+    }
+}

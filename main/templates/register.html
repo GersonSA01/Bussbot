@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - BussBot{% endblock %}
+
+{% block content %}
+{% load static %}
+    <div class="register-container">
+        <div class="register-header">
+            <h3>REGÍSTRATE</h3>
+        </div>
+        <form method="post" class="p-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-custom btn-block mt-4">Registrarme</button>
+        </form>
+        <a href="{% url 'login' %}">¿Ya tienes una cuenta? Inicia sesión</a>
+    </div>
+{% endblock %}
