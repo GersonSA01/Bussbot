@@ -10,9 +10,6 @@
 - OpenStreetMap API
 - Chatbot para rutas
 
-## Mi Rol
-
-Mi rol en el proyecto fue la **creación del chatbot** encargado del procesamiento del destino y la determinación de las rutas de los buses. El chatbot interpreta la solicitud del usuario y proporciona información sobre qué buses tomar en función de la ruta disponible.
 
 ## Cómo Funciona
 
