@@ -3,62 +3,114 @@
 {% block title %}Bienvenido - BussBot{% endblock %}
 
 {% block content %}
-
 {% load static %}
 
 <div class="main-content container">
-        <div class="sidebar">
-            <div class="input-container">
-                <!-- Input de origen -->
-                <div class="input-wrapper">
-                    <i class="fas fa-search"></i> <!-- Ícono de búsqueda -->
-                    <input type="text" placeholder="Selecciona origen">
-                </div>
-                
-                <!-- Input de destino -->
-                <div class="input-wrapper">
-                    <i class="fas fa-search"></i> <!-- Ícono de búsqueda -->
-                    <input type="text" placeholder="Selecciona destino">
-                </div>
-            </div>
-            
-            <!-- Resultados de búsqueda -->
-            <div class="result-item">
-                <i class="fas fa-bus"></i>
-                <p>Av. 26 - So (Portete De Tarqui) Y Calle 17 -So (Milagro) (49)</p>
-            </div>
-            <div class="result-item">
-                <i class="fas fa-bus"></i>
-                <p>Calle 17 - So (Milagro) Y Calle Carlos Gomez Rendon - So (S135)</p>
-            </div>
-            
-            <div class="suggestion">
-                Agrega direcciones de origen y destino para obtener una lista de rutas sugeridas entre ambas.
-            </div>
-            
+    <div class="sidebar">
+        <div class="user-greeting mb-3">
+            <h4>Bienvenido, {{ user.first_name }} {{ user.last_name }}</h4>
         </div>
-
-        <div class="map-container">
-            <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15936.423650610026!2d-79.5988940173376!3d-2.1323284841880536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902d156a4c399ff5%3A0xa4a53a96229b2b91!2sUniversidad%20Estatal%20de%20Milagro%20(UNEMI)!5e0!3m2!1ses-419!2sec!4v1697402599373!5m2!1ses-419!2sec"
-            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-
-        <div class="chat-container">
-            <div class="chat-header">Buss-Bot</div>
-            <div class="chat-body" id="chat-body">
+        <div class="rutas">
+            <div class="result-item">
+                <button class="btn btn-success" onclick="showRoute('all')">Mostrar Todas</button>
             </div>
-            <form class="chat-footer">
-                <input type="text" class="form-control" placeholder="Escribe un mensaje..." required>
-                <button type="submit" class="btn btn-custom">
-                    <i class="fas fa-paper-plane"></i>
+            {% for route_name in all_routes %}
+            <div class="result-item">
+                <button class="btn btn-primary" onclick="showRoute('{{ route_name }}')">{{ route_name }}</button>
+                <button class="bookmark" onclick="toggleFavorite(this, '{{ route_name }}')">
+                    <svg
+                        width="15"
+                        viewBox="0 0 50 70"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="svgIcon"
+                    >
+                        <path
+                            d="M46 62.0085L46 3.88139L3.99609 3.88139L3.99609 62.0085L24.5 45.5L46 62.0085Z"
+                            stroke="black"
+                            stroke-width="7"
+                            {% if route_name in favorite_routes %}
+                            style="fill: white;"
+                            {% else %}
+                            style="fill: #dddddd00;" 
+                            {% endif %}
+                        ></path>
+                    </svg>
                 </button>
-            </form>
+            </div>
+            {% endfor %}
         </div>
-        
+
+        <br>
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+        </form>
     </div>
 
-  
-    <script src="{% static 'js/chatbot.js' %}"></script>
+    <div class="map-container">
+        <div id="mapid" style="height: 400px;"></div>
+    </div>
 
+    <div id="chat-toggle" class="chat-toggle" onclick="toggleChat()">
+        <i class="bi bi-chat-dots"></i>
+    </div>
+    
+    <div class="chat-container" id="chat-container">
+        <div class="chat-header">Buss-Bot</div>
+        <div class="chat-body" id="chat-body"></div>
+        <form class="chat-footer">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje..." required>
+            <button type="submit" class="btn btn-custom">
+                <div class="bi bi-send"></div>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    var busIconUrl = "{% static 'images/icono-bus.png' %}";
+
+    function toggleChat() {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+            chatContainer.style.display = 'block';
+        } else {
+            chatContainer.style.display = 'none';
+        }
+    }
+
+    function toggleFavorite(button, routeName) {
+        const svgPath = button.querySelector('.svgIcon path');
+        const isFavorite = svgPath.style.fill === 'white';
+
+        console.log(`Nombre de la ruta: ${routeName}`);
+        console.log(`Estado antes del cambio: ${isFavorite ? 'Favorito' : 'No favorito'}`);
+
+        if (isFavorite) {
+            svgPath.style.fill = '#dddddd00'; 
+        } else {
+            svgPath.style.fill = 'white'; 
+        }
+
+        const payload = { "route_name": routeName, "is_favorite": !isFavorite };
+        console.log('Datos enviados al servidor:', payload);
+
+        fetch("{% url 'save_favorite_route' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+    }
+</script>
+<script>
+    console.log("Rutas favoritas:", {favorite_routes});
+</script>
+
+<script src="{% static 'js/chatbot.js' %}"></script>
+<script src="{% static 'js/busRutas.js' %}"></script>
 {% endblock %}

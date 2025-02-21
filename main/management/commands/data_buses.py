@@ -1,15 +1,14 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const chatBody = document.getElementById('chat-body');
-    const chatFooter = document.querySelector('.chat-footer');
-    const inputDestination = document.getElementById('input-destination');
-    let currentLocationMarker;
-    let destinationMarker;
+from django.core.management.base import BaseCommand
+from main.models import Md_Ruta, Md_Localizacion, Md_Estado, Md_Bus, Md_Parada
+from django.utils import timezone
 
-    addCurrentLocationMarker();
+class Command(BaseCommand):
+    help = 'Cargar datos de buses en la base de datos'
 
-    
+    def handle(self, *args, **kwargs):
+        estado_operativo, _ = Md_Estado.objects.get_or_create(Descripcion='Operativo')
 
-    const rutas = {
+        rutas_y_coordenadas = {
         'Línea 1': [
             [-2.129343510697523, -79.59173529220413],
             [-2.128704050715952, -79.5963376649886],
@@ -194,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
             [-2.1141804362832732, -79.57898850224295]
         ],
             'Línea 9': [
-           [-2.126534702278908, -79.59512073375149],
+        [-2.126534702278908, -79.59512073375149],
             [-2.126304453815802, -79.59224555145663],
             [-2.126043000588667, -79.5908561882225],
             [-2.125817609840083, -79.58964726177201],
@@ -236,260 +235,56 @@ document.addEventListener("DOMContentLoaded", function () {
             [-2.1390323777551625, -79.63450236683022]
         ],
 
-   
-
-    };
-
-    appendMessage("¡Hola! Bienvenido a BussBot 🤖🚌. ¿En qué puedo ayudarte hoy? Dime a dónde quieres ir usando frases como 'quiero ir a la unemi'.", 'bot');
 
 
-    function appendMessage(content, sender, isUpdate = false) {
-        let message;
-        if (isUpdate) {
-            message = document.getElementById('update-message');
-            if (!message) {
-                message = document.createElement('div');
-                message.id = 'update-message';
-                message.classList.add('message', sender);
-                chatBody.appendChild(message);
-            }
-            message.innerText = content;
-        } else {
-            message = document.createElement('div');
-            message.classList.add('message', sender);
-            message.innerText = content;
-            chatBody.appendChild(message);
-        }
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function calculateDistance(coord1, coord2) {
-        const latDiff = coord1[0] - coord2[0];
-        const lonDiff = coord1[1] - coord2[1];
-        return Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
-    }
-
-
-    chatFooter.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const input = chatFooter.querySelector('input');
-        const userMessage = input.value.trim().toLowerCase();
-
-        if (userMessage !== '') {
-            appendMessage(userMessage, 'user');
-            input.value = '';
-
-            if (isTravelQuery(userMessage)) {
-                handleTravelQuery(userMessage);
-            } else {
-                appendMessage("No pude entender tu solicitud. Intenta usar un formato reconocido.", 'bot');
-            }
-        }
-    });
-
-    let userLatLng = null; 
-
-    function addCurrentLocationMarker() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                userLatLng = [position.coords.latitude, position.coords.longitude]; 
-    
-                if (window.map) {
-                    L.marker(userLatLng).addTo(window.map)
-                        .bindPopup("Estas aqui")
-                        .openPopup();
-                    window.map.setView(userLatLng, 15);
-                } else {
-                    console.error("El mapa no está inicializado.");
-                }
-            }, function (error) {
-                console.error("No se pudo obtener la ubicación actual: ", error);
-                appendMessage("No se pudo obtener tu ubicación actual. Verifica los permisos de geolocalización.", 'bot');
-            });
-        } else {
-            console.error("La geolocalización no es compatible con este navegador.");
-            appendMessage("La geolocalización no es compatible con tu navegador.", 'bot');
-        }
-    }
-    
-
-
-function traceRoute(destinationLatLng) {
-    if (!window.map) {
-        console.error("El mapa no está inicializado.");
-        return;
-    }
-
-    if (window.routeControl) {
-        window.map.removeControl(window.routeControl);
-    }
-
-    if (destinationMarker) {
-        window.map.removeLayer(destinationMarker);
-    }
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const currentLatLng = [position.coords.latitude, position.coords.longitude];
-
-            if (!currentLocationMarker) {
-                currentLocationMarker = L.marker(currentLatLng).addTo(window.map)
-                    .bindPopup("Estas aqui")
-                    .openPopup();
-            }
-
-            destinationMarker = L.marker(destinationLatLng).addTo(window.map);
-
-            window.routeControl = L.Routing.control({
-                waypoints: [
-                    L.latLng(currentLatLng),
-                    L.latLng(destinationLatLng)
-                ],
-                routeWhileDragging: true,
-                showAlternatives: false,
-                createMarker: function() { return null; },
-                lineOptions: {
-                    styles: [{ color: 'black', opacity: 0.7, weight: 4 }]
-                },
-                show: false
-            }).addTo(window.map);
+        
             
-
-            console.log(`Ruta trazada desde la ubicación actual ${currentLatLng} hasta ${destinationLatLng}`);
-        }, function (error) {
-            console.error("No se pudo obtener la ubicación actual: ", error);
-            appendMessage("No se pudo obtener tu ubicación actual. Verifica los permisos de geolocalización.", 'bot');
-        });
-    } else {
-        console.error("La geolocalización no es compatible con este navegador.");
-        appendMessage("La geolocalización no es compatible con tu navegador.", 'bot');
-    }
 }
+        
+        Md_Ruta.objects.exclude(nombre__in=rutas_y_coordenadas.keys()).delete()
 
+        for nombre_ruta, coordenadas in rutas_y_coordenadas.items():
+            rutas_existentes = Md_Ruta.objects.filter(nombre=nombre_ruta)
+            if rutas_existentes.exists():
+                nueva_ruta = rutas_existentes.first()
+                created = False
+                if rutas_existentes.count() > 1:
+                    rutas_existentes.exclude(id=nueva_ruta.id).delete()
+            else:
+                nueva_ruta = Md_Ruta.objects.create(
+                    nombre=nombre_ruta,
+                    descripcion=f'Ruta que conecta puntos de interés en {nombre_ruta}',
+                    user=None
+                )
+                created = True
 
-const lugares = {
-    "paseo shopping": "Paseo Shopping Milagro",
-    "shopping": "Paseo Shopping Milagro",
-    "centro comercial": "Paseo Shopping Milagro",
-    "shoping": "Paseo Shopping Milagro",
-    "paseo": "Paseo Shopping Milagro",
-    "terminal": "Terminal Terrestre",
-    "hospital": [-2.132388386626214, -79.57886004912199],    
-    "tuti": [-2.136887494838064, -79.59670220987286],    
-};
+            if not created:
+                print(f'Actualizando la ruta {nombre_ruta}')
+                Md_Localizacion.objects.filter(idRuta=nueva_ruta).delete()
+                Md_Parada.objects.filter(idRuta=nueva_ruta).delete()
+            else:
+                print(f'Creando la ruta {nombre_ruta}')
 
+            for i, coord in enumerate(coordenadas):
+                localizacion = Md_Localizacion.objects.create(CoordX=coord[0], CoordY=coord[1], idRuta=nueva_ruta)
+                Md_Parada.objects.create(Nombre=f'Parada {i + 1} de {nombre_ruta}', idRuta=nueva_ruta)
 
+                if i == 0:
+                    bus_existe = Md_Bus.objects.filter(idRuta=nueva_ruta).exists()
+                    if not bus_existe:
+                        Md_Bus.objects.create(
+                            Numero=f'Bus para {nombre_ruta}',
+                            Tiempo_llegada='08:00',
+                            Tiempo_salida=timezone.now(),
+                            idEstado=estado_operativo,
+                            idRuta=nueva_ruta,
+                            idLocalizacion=localizacion
+                        )
+                    else:
+                        bus = Md_Bus.objects.get(idRuta=nueva_ruta)
+                        bus.Tiempo_llegada = '08:00'
+                        bus.Tiempo_salida = timezone.now()
+                        bus.idLocalizacion = localizacion
+                        bus.save()
 
-    function isTravelQuery(message) {
-        const words = message.split(' ');
-        const travelPhrases = ['quiero', 'me', 'deseo'];
-    
-        if (travelPhrases.includes(words[0]) && words[1] === 'ir') {
-            return true;
-        }
-        return false;
-    }
-
-    function handleTravelQuery(message) {
-        const words = message.split(' ').slice(2); 
-        const ignoreWords = ['al', 'a', 'el', 'la', 'los', 'las'];
-        let destinationWords = words.filter(word => !ignoreWords.includes(word.toLowerCase()));
-        let destination = destinationWords.join(' ').trim().toLowerCase();
-    
-        if (destination) {
-            let foundKeys = Object.keys(lugares).filter(key => destination.includes(key));
-    
-            if (foundKeys.length > 1) {
-                appendMessage(`Encontré varias ubicaciones para "${destination}": ${foundKeys.join(", ")}. Por favor, especifica cuál prefieres.`, 'bot');
-            } else if (foundKeys.length === 1) {
-                let foundKey = foundKeys[0];
-                let resolvedDestination = lugares[foundKey];
-    
-                if (Array.isArray(resolvedDestination)) {
-                    appendMessage(`Usando ubicación directa para "${foundKey}".`, 'bot');
-                    searchLocation(resolvedDestination);
-                } else {
-                    appendMessage(`Buscando ubicación para "${resolvedDestination}"...`, 'bot');
-                    searchLocation(resolvedDestination);
-                }
-            } else {
-                appendMessage(`Buscando ubicación para "${destination}"...`, 'bot');
-                searchLocation(destination);
-            }
-        } else {
-            appendMessage("No pude entender tu solicitud. Por favor, asegúrate de que la frase termine con el destino.", 'bot');
-        }
-    }
-    
-    
-    
-    function searchLocation(query, routeName = null) {
-        if (Array.isArray(query)) {
-            console.log("Se usaron coordenadas directas:", query);
-            const destinationLatLng = query; 
-            traceRoute(destinationLatLng);
-    
-            const nearbyRoutes = findNearbyRoutes(destinationLatLng);
-            if (nearbyRoutes.length > 0) {
-                appendMessage(`Las líneas de buses que pasan cerca de la ubicación son: ${nearbyRoutes.join(", ")}`, 'bot');
-            } else {
-                appendMessage("No se encontraron líneas de buses que pasen cerca de esta ubicación.", 'bot');
-            }
-            return; 
-        }
-    
-        if (typeof query !== 'string') {
-            console.error("El valor de 'query' no es una cadena:", query, "Tipo:", typeof query);
-            appendMessage("Error interno al procesar la ubicación. Inténtalo nuevamente.", 'bot');
-            return;
-        }
-    
-        const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}, Milagro, Ecuador&format=json&limit=1`;
-    
-        fetch(nominatimUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    const destinationLatLng = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-                    console.log(`Coordenadas obtenidas de la API: ${destinationLatLng}`);
-    
-                    window.selectedDestination = destinationLatLng;
-    
-                    traceRoute(destinationLatLng);
-    
-                    const nearbyRoutes = findNearbyRoutes(destinationLatLng);
-                    if (nearbyRoutes.length > 0) {
-                        appendMessage(`Las líneas de buses que pasan cerca de la ubicacionson: ${nearbyRoutes.join(", ")}`, 'bot');
-                    } else {
-                        appendMessage("No se encontraron líneas de buses que pasen cerca de esta ubicación.", 'bot');
-                    }
-                } else {
-                    appendMessage("No se encontró la ubicación especificada en Milagro.", 'bot');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                appendMessage("Error al buscar la ubicación. Inténtalo nuevamente.", 'bot');
-            });
-    }
-    
-    
-    
-    window.findNearbyRoutes = function (destinationLatLng) {
-        const thresholdDistance = 0.005;
-        const nearbyRoutes = [];
-    
-        Object.keys(rutas).forEach(routeName => {
-            const routeCoordinates = rutas[routeName];
-            for (let coord of routeCoordinates) {
-                const distance = calculateDistance(coord, destinationLatLng);
-                if (distance <= thresholdDistance) {
-                    nearbyRoutes.push(routeName);
-                    break;
-                }
-            }
-        });
-    
-        return nearbyRoutes;
-    };
-});
+            print(f'Ruta, buses y paradas procesados para {nombre_ruta}')

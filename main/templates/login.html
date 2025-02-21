@@ -7,6 +7,11 @@
         <div class="login-header">
             <h3>INICIAR SESIÓN</h3>
         </div>
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
         <form method="post" class="p-4">
             {% csrf_token %}
             <div class="form-group">

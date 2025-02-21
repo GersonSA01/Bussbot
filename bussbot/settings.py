@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-g_ja3g$s75t0o&wptv442g1+(+glt5$428zzuzefnbhyw*=6f&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'main',
-
 ]
 
 
@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -129,6 +129,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'welcome'
+# Redirige después de iniciar sesión
+LOGIN_REDIRECT_URL = 'inicio'
+# Redirige después de cerrar sesión
 LOGOUT_REDIRECT_URL = 'login'
+# URL para redirigir si el usuario no está autenticado
+LOGIN_URL = 'login'
+
 

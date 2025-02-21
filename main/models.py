@@ -1,38 +1,32 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 class Md_Localizacion(models.Model):
     idLocalizacion = models.AutoField(primary_key=True)
     CoordX = models.FloatField()
     CoordY = models.FloatField()
+    idRuta = models.ForeignKey('Md_Ruta', on_delete=models.CASCADE) 
 
     def __str__(self):
         return f"Localizacion {self.idLocalizacion}"
-
-class Md_Chatbot(models.Model):
-    idChatbot = models.AutoField(primary_key=True)
-    Nombre = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.Nombre
 
 class Md_Usuario(models.Model):
     idUsuario = models.AutoField(primary_key=True)
     Nombre = models.CharField(max_length=200)
     Apellido = models.CharField(max_length=200)
-    idChatbot = models.ForeignKey(Md_Chatbot, on_delete=models.CASCADE)
     idLocalizacion = models.ForeignKey(Md_Localizacion, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.Nombre} {self.Apellido}"
 
 class Md_Ruta(models.Model):
-    idRuta = models.AutoField(primary_key=True)
-    Nombre = models.CharField(max_length=200)
-    Descripcion = models.CharField(max_length=300)
-    Tiempo = models.DateTimeField()
+    nombre = models.CharField(max_length=100, default="Ruta desconocida")
+    descripcion = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True) 
+    is_favorite = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.Nombre
+        return self.nombre 
+
 
 class Md_Estado(models.Model):
     idEstado = models.AutoField(primary_key=True)
